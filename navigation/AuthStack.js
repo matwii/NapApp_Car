@@ -3,7 +3,7 @@ import { createStackNavigator } from 'react-navigation';
 import AuthScreen from "../screens/AuthScreen";
 
 const AuthStack = createStackNavigator({
-    Main: AuthScreen,
+    Auth: AuthScreen,
 });
 
 export default AuthStack;

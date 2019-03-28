@@ -9,6 +9,10 @@ class MainScreen extends React.Component {
         super(props);
     }
 
+    static navigationOptions = {
+        tabBarVisible: true
+    };
+
     render() {
         return (
             <View>
