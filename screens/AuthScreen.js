@@ -40,9 +40,6 @@ export default class AuthScreen extends React.Component {
             return this.setState({errorMessage: response.error})
         }
         await AsyncStorage.setItem('token', response.data.token);
-        const screenNumber = this.props.navigation.state.params ? this.props.navigation.state.params.screenNumber : 0;
-        const params = { screenNumber: screenNumber + 1 };
-        if (Math.random() > .75) params.plain = true;
         this.props.navigation.navigate('App');
     };
 
