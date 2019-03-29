@@ -4,11 +4,10 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 
 import TabBarIcon from '../components/TabBarIcon';
 import SettingsScreen from '../screens/SettingsScreen';
-import MainScreen from "../screens/MainScreen";
-
+import MapContainer from '../containers/MapContainer'
 
 const HomeStack = createStackNavigator({
-  Main: MainScreen,
+  Main: MapContainer,
 });
 
 HomeStack.navigationOptions = {

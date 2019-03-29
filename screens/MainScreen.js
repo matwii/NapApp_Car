@@ -1,33 +1,20 @@
 import React from 'react';
 import {
-    Text,
-    View,
     AsyncStorage,
-    TouchableOpacity
+    Platform,
+    View,
+    ActivityIndicator
 } from 'react-native';
-import {Location, TaskManager, Permissions} from 'expo';
+import {MapView} from 'expo';
+import {TaskManager} from 'expo';
 import {Button} from 'react-native-elements'
-
-const LOCATION_TASK_NAME = 'background-location-task';
+import { Ionicons } from '@expo/vector-icons';
 
 class MainScreen extends React.Component {
 
-    startLocationFetch = async () => {
-        const {Location, Permissions} = Expo;
-        // permissions returns only for location permissions on iOS and under certain conditions, see Permissions.LOCATION
-        const {status, permissions} = await Permissions.askAsync(Permissions.LOCATION);
-        if (status === 'granted') {
-            return await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-                accuracy: Location.Accuracy.High,
-                timeInterval: 10000,
-                distanceInterval: 0
-            });
-        } else {
-            throw new Error('Location permission not granted');
-        }
-
-    };
-
+    componentDidMount(){
+        this.props.startBackgroundFetch();
+    }
     /**
      * Adds button to the header for signing out the user.
      * Signs out the user by first removing token from AsyncStorage then navigating back to AuthScreen
@@ -41,7 +28,7 @@ class MainScreen extends React.Component {
                 <Button
                     onPress={async () => {
                         await AsyncStorage.removeItem('token');
-                        await TaskManager.unregisterTaskAsync(LOCATION_TASK_NAME)
+                        await TaskManager.unregisterTaskAsync('background-location-task');
                         navigation.navigate('Auth')
                     }}
                     title='Sign Out'
@@ -53,25 +40,28 @@ class MainScreen extends React.Component {
     };
 
     render() {
-        this.startLocationFetch();
         return (
-            <View>
-                <Text>MainScreen</Text>
+            <View style={{flex: 1}}>
+                {this.props.isLoading ?
+                    <ActivityIndicator size="large" color="#0000ff" />
+                    : <MapView
+                        region={this.props.region}
+                        onRegionChange={region => console.log(region)}
+                        style={{flex: 1}}
+                    >
+                        <MapView.Marker
+                            coordinate={{
+                                latitude: this.props.region.latitude,
+                                longitude: this.props.region.longitude,
+                            }}
+                        >
+                            <Ionicons name={Platform.OS === 'ios' ? 'ios-car' : 'md-car'} size={32} color="blue" />
+                        </MapView.Marker>
+                    </MapView>
+                }
             </View>
         );
     }
 }
-
-TaskManager.defineTask(LOCATION_TASK_NAME, ({data, error}) => {
-    if (error) {
-        // Error occurred - check `error.message` for more details.
-        return;
-    }
-    if (data) {
-        const {locations} = data;
-        console.log(locations);
-        // do something with the locations captured in the background
-    }
-});
 
 export default MainScreen;

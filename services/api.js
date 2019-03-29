@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const ROOT_URL="http://192.168.0.33:3000";
+import { HOST }from '../config/config'
 
 const config = {
     headers: {'x-auth-token': 'Header-Value'}
@@ -9,7 +8,7 @@ const config = {
 export default {
     async login(regNr) {
         try{
-            const response = await axios.post(`${ROOT_URL}/auth/login-car`, {regNr}, config);
+            const response = await axios.post(`http://${HOST}/auth/login-car`, {regNr}, config);
             return response;
         } catch (e) {
             const response = {
