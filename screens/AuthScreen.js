@@ -53,7 +53,6 @@ export default class AuthScreen extends React.Component {
         return (
             <View style={styles.container}>
                 <ImageBackground source={BG_IMAGE} style={styles.bgImage}>
-                    <View>
                         <KeyboardAvoidingView
                             contentContainerStyle={styles.loginContainer}
                             behavior="position"
@@ -103,7 +102,6 @@ export default class AuthScreen extends React.Component {
                                 />
                             </View>
                         </KeyboardAvoidingView>
-                    </View>
                 </ImageBackground>
             </View>
         );

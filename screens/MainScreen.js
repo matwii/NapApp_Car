@@ -5,21 +5,22 @@ import {
     AsyncStorage,
     TouchableOpacity
 } from 'react-native';
-import { Location, TaskManager, Permissions } from 'expo';
-import { Button } from 'react-native-elements'
+import {Location, TaskManager, Permissions} from 'expo';
+import {Button} from 'react-native-elements'
 
 const LOCATION_TASK_NAME = 'background-location-task';
 
 class MainScreen extends React.Component {
 
-
-    onPress = async () => {
-        const { Location, Permissions } = Expo;
+    startLocationFetch = async () => {
+        const {Location, Permissions} = Expo;
         // permissions returns only for location permissions on iOS and under certain conditions, see Permissions.LOCATION
-        const { status, permissions } = await Permissions.askAsync(Permissions.LOCATION);
+        const {status, permissions} = await Permissions.askAsync(Permissions.LOCATION);
         if (status === 'granted') {
             return await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
                 accuracy: Location.Accuracy.High,
+                timeInterval: 10000,
+                distanceInterval: 0
             });
         } else {
             throw new Error('Location permission not granted');
@@ -38,7 +39,7 @@ class MainScreen extends React.Component {
             tabBarVisible: true,
             headerRight: (
                 <Button
-                    onPress={async() => {
+                    onPress={async () => {
                         await AsyncStorage.removeItem('token');
                         await TaskManager.unregisterTaskAsync(LOCATION_TASK_NAME)
                         navigation.navigate('Auth')
@@ -52,25 +53,23 @@ class MainScreen extends React.Component {
     };
 
     render() {
+        this.startLocationFetch();
         return (
             <View>
                 <Text>MainScreen</Text>
-                <TouchableOpacity onPress={this.onPress}>
-                    <Text>Enable background location</Text>
-                </TouchableOpacity>
             </View>
         );
     }
 }
 
-TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
+TaskManager.defineTask(LOCATION_TASK_NAME, ({data, error}) => {
     if (error) {
         // Error occurred - check `error.message` for more details.
         return;
     }
     if (data) {
-        const { locations } = data;
-        console.log('FETCH: ' + locations);
+        const {locations} = data;
+        console.log(locations);
         // do something with the locations captured in the background
     }
 });
