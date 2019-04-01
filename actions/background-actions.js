@@ -15,14 +15,14 @@ export const setCurrentRegion = (region) => (
     }
 );
 
-const fetchLocationError = () => (
+export const fetchLocationError = () => (
     {
         type: FETCH_LOCATION_ERROR,
         payload: {error: true},
     }
 );
 
-const fetchLocationRequest = () => (
+export const fetchLocationRequest = () => (
     {
         type: FETCH_LOCATION_REQUEST,
         payload: {isLoading: true},
@@ -59,24 +59,6 @@ export const startBackgroundFetch = () => (
  */
 const taskManager = () => (
     async (dispatch) => {
-        TaskManager.defineTask(LOCATION_TASK_NAME, ({data, error}) => {
-            if (error) {
-                // Error occurred - check `error.message` for more details.
-                return dispatch(fetchLocationError())
-            }
-            if (data) {
-                let {locations} = data;
-                // do something with the locations captured in the background
-                if (!locations[0].coords.latitudeDelta) {
-                    locations = {
-                        latitude: locations[0].coords.latitude,
-                        longitude: locations[0].coords.longitude,
-                        latitudeDelta: 0.05,
-                        longitudeDelta: 0.05,
-                    }
-                }
-                dispatch(setCurrentRegion(locations))
-            }
-        });
+
     }
 );

@@ -1,9 +1,12 @@
 import React from 'react';
 import {Platform, StatusBar, StyleSheet, View, UIManager, AsyncStorage} from 'react-native';
-import {AppLoading, Asset, Font, Icon} from 'expo';
+import {AppLoading, Asset, Font, Icon, TaskManager} from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 import {Provider} from 'react-redux';
 import configureStore from './store/configureStore';
+import {setCurrentRegion} from "./actions/background-actions";
+const LOCATION_TASK_NAME = 'background-location-task';
+
 
 // Enable LayoutAnimation on Android
 UIManager.setLayoutAnimationEnabledExperimental &&
@@ -70,4 +73,24 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
+});
+
+TaskManager.defineTask(LOCATION_TASK_NAME, ({data, error}) => {
+    if (error) {
+        // Error occurred - check `error.message` for more details.
+        store.dispatch(fetchLocationError())
+    }
+    if (data) {
+        let {locations} = data;
+        // do something with the locations captured in the background
+        if (!locations[0].coords.latitudeDelta) {
+            locations = {
+                latitude: locations[0].coords.latitude,
+                longitude: locations[0].coords.longitude,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.05,
+            }
+        }
+        store.dispatch(setCurrentRegion(locations))
+    }
 });
