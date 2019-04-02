@@ -4,7 +4,7 @@ import {AppLoading, Asset, Font, Icon, TaskManager} from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 import {Provider} from 'react-redux';
 import configureStore from './store/configureStore';
-import {setCurrentRegion} from "./actions/background-actions";
+import {fetchLocationError, updateCarPosition} from "./actions/background-actions";
 const LOCATION_TASK_NAME = 'background-location-task';
 
 
@@ -91,6 +91,7 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({data, error}) => {
                 longitudeDelta: 0.05,
             }
         }
-        store.dispatch(setCurrentRegion(locations))
+        const { carId, token } = store.getState().auth;
+        store.dispatch(updateCarPosition(locations, carId, token))
     }
 });

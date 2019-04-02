@@ -8,7 +8,7 @@ const config = {
 export default {
     async login(regNr) {
         try{
-            const response = await axios.post(`http://${HOST}/auth/login-car`, {regNr}, config);
+            const response = await axios.post(`${HOST}/auth/login-car`, {regNr}, config);
             return response;
         } catch (e) {
             const response = {
@@ -17,4 +17,15 @@ export default {
             return response
         }
     },
+    async updateCarPosition(id, token, latitude, longitude){
+        try{
+            const response = await axios.put(`${HOST}/car/${id}`, {token, latitude, longitude}, config);
+            return response
+        } catch (e) {
+            const response = {
+                error: e.response.data
+            };
+            return response
+        }
+    }
 }

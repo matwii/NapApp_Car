@@ -35,11 +35,7 @@ export default class AuthScreen extends React.Component {
     };
 
     login = async (regNr) => {
-        const response = await api.login(regNr);
-        if (response.error){
-            return this.setState({errorMessage: response.error})
-        }
-        await AsyncStorage.setItem('token', response.data.token);
+        await this.props.signIn(regNr);
         this.props.navigation.navigate('App');
     };
 

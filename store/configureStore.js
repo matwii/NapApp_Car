@@ -5,7 +5,7 @@ import loggingMiddleware from './middleware/logging';
 import socketMiddleware from './middleware/socket-middleware';
 
 const configureStore = (initialState) => {
-    const middleware = applyMiddleware(thunk, loggingMiddleware, socketMiddleware());
+    const middleware = applyMiddleware(thunk, loggingMiddleware);
 
     return createStore(rootReducer, initialState, middleware);
 };

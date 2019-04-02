@@ -4,8 +4,12 @@ import {
     FETCH_LOCATION_REQUEST,
 } from './action-types';
 import {Location, TaskManager, Permissions} from 'expo';
+import api from "../services/api";
+import io from "socket.io-client";
+import {HOST} from "../config/config";
 
 const LOCATION_TASK_NAME = 'background-location-task';
+const SOCKET = io(`${HOST}`, { forceNew: true })
 
 
 export const setCurrentRegion = (region) => (
@@ -29,6 +33,14 @@ export const fetchLocationRequest = () => (
     }
 );
 
+export const updateCarPosition = (region, carId,  token) => (
+    async (dispatch) => {
+        dispatch(setCurrentRegion(region));
+        //const response = await api.updateCarPosition(carId, token, region.latitude, region.longitude);
+        SOCKET.emit('updateCarPosition', carId, token, region.latitude, region.longitude)
+    }
+);
+
 /**
  * Initiates background location fetching for each 10th second.
  * @returns {Function}
@@ -45,20 +57,9 @@ export const startBackgroundFetch = () => (
                 timeInterval: 10000,
                 distanceInterval: 0
             });
-            dispatch(taskManager())
         } else {
             dispatch(fetchLocationError());
             throw new Error('Location permission not granted');
         }
-    }
-);
-
-/**
- * Defines the task for background fetching, everytime the task gets location data it stores it in redux state
- * @returns {Function}
- */
-const taskManager = () => (
-    async (dispatch) => {
-
     }
 );

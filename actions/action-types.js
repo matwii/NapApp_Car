@@ -1,3 +1,8 @@
 export const FETCH_LOCATION_REQUEST = 'FETCH_LOCATION_REQUEST';
 export const FETCH_LOCATION_ERROR = 'FETCH_LOCATION_ERROR';
 export const SET_REGION = 'SET_REGION';
+
+export const AUTH_SUCCESS = 'AUTH_SUCCESS';
+export const AUTH_REQUEST = 'AUTH_REQUEST';
+export const AUTH_ERROR = 'AUTH_ERROR';
+export const SIGN_OUT = 'SIGN_OUT';

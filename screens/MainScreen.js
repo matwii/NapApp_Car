@@ -11,7 +11,6 @@ import {Button} from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
 
 class MainScreen extends React.Component {
-
     componentDidMount(){
         this.props.startBackgroundFetch();
     }
@@ -28,6 +27,7 @@ class MainScreen extends React.Component {
                 <Button
                     onPress={async () => {
                         await AsyncStorage.removeItem('token');
+                        await AsyncStorage.removeItem('id');
                         await TaskManager.unregisterTaskAsync('background-location-task');
                         navigation.navigate('Auth')
                     }}
