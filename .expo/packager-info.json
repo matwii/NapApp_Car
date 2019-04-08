@@ -1,8 +1,9 @@
 {
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
-  "expoServerPort": null
+  "packagerPort": 19001,
+  "packagerPid": 4916,
+  "expoServerNgrokUrl": "https://rm-cap.napapp.napapp-car.exp.direct",
+  "packagerNgrokUrl": "https://packager.rm-cap.napapp.napapp-car.exp.direct",
+  "ngrokPid": 1868,
+  "expoServerPort": 19000,
+  "devToolsPort": 19002
 }

@@ -4,6 +4,8 @@ import {
     AUTH_ERROR,
     SIGN_OUT
 } from '../actions/action-types';
+import io from "socket.io-client";
+import {HOST} from '../config/config';
 
 const initialState = {
     isLoading: false,
@@ -11,6 +13,7 @@ const initialState = {
     isAuthenticated: false,
     carId: null,
     token: '',
+    socket: io(`${HOST}`, { forceNew: true })
 };
 
 const authReducer = (state = initialState, action) => {

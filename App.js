@@ -92,6 +92,6 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({data, error}) => {
             }
         }
         const { carId, token } = store.getState().auth;
-        store.dispatch(updateCarPosition(locations, carId, token))
+        token && store.dispatch(updateCarPosition(locations, carId, token))
     }
 });

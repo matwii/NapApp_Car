@@ -4,13 +4,8 @@ import {
     FETCH_LOCATION_REQUEST,
 } from './action-types';
 import {Location, TaskManager, Permissions} from 'expo';
-import api from "../services/api";
-import io from "socket.io-client";
-import {HOST} from "../config/config";
 
 const LOCATION_TASK_NAME = 'background-location-task';
-const SOCKET = io(`${HOST}`, { forceNew: true })
-
 
 export const setCurrentRegion = (region) => (
     {
@@ -34,10 +29,13 @@ export const fetchLocationRequest = () => (
 );
 
 export const updateCarPosition = (region, carId,  token) => (
-    async (dispatch) => {
+    async (dispatch, getState) => {
+        const {socket} = await getState().auth;
+        console.log('SOCKET', socket)
         dispatch(setCurrentRegion(region));
         //const response = await api.updateCarPosition(carId, token, region.latitude, region.longitude);
-        SOCKET.emit('updateCarPosition', carId, token, region.latitude, region.longitude)
+        socket.emit('updateCarPosition', carId, token, region.latitude, region.longitude)
+        socket.emit('getCarRides', carId);
     }
 );
 
