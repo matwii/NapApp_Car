@@ -2,6 +2,7 @@ import {
     SET_REGION,
     FETCH_LOCATION_ERROR,
     FETCH_LOCATION_REQUEST,
+    SET_SOCKET
 } from './action-types';
 import {Location, TaskManager, Permissions} from 'expo';
 
@@ -11,6 +12,12 @@ export const setCurrentRegion = (region) => (
     {
         type: SET_REGION,
         payload: {region},
+    }
+);
+
+export const setSocket = () => (
+    {
+        type: SET_SOCKET,
     }
 );
 
@@ -31,10 +38,9 @@ export const fetchLocationRequest = () => (
 export const updateCarPosition = (region, carId,  token) => (
     async (dispatch, getState) => {
         const {socket} = await getState().auth;
-        console.log('SOCKET', socket)
         dispatch(setCurrentRegion(region));
         //const response = await api.updateCarPosition(carId, token, region.latitude, region.longitude);
-        socket.emit('updateCarPosition', carId, token, region.latitude, region.longitude)
+        socket.emit('updateCarPosition', carId, token, region.latitude, region.longitude);
         socket.emit('getCarRides', carId);
     }
 );

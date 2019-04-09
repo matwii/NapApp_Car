@@ -2,7 +2,7 @@ import {
     AUTH_SUCCESS,
     AUTH_REQUEST,
     AUTH_ERROR,
-    SIGN_OUT
+    SIGN_OUT, SET_SOCKET
 } from '../actions/action-types';
 import io from "socket.io-client";
 import {HOST} from '../config/config';
@@ -13,7 +13,7 @@ const initialState = {
     isAuthenticated: false,
     carId: null,
     token: '',
-    socket: io(`${HOST}`, { forceNew: true })
+    socket: null
 };
 
 const authReducer = (state = initialState, action) => {
@@ -43,6 +43,12 @@ const authReducer = (state = initialState, action) => {
         }
         case SIGN_OUT: {
             return initialState
+        }
+        case SET_SOCKET: {
+            return {
+                ...state,
+                socket: io(`${HOST}`, { forceNew: true })
+            }
         }
         default:
             return state

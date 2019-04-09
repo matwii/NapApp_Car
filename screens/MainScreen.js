@@ -3,16 +3,23 @@ import {
     AsyncStorage,
     Platform,
     View,
-    ActivityIndicator
+    ActivityIndicator,
+    StyleSheet,
+    Text,
+    Dimensions,
+    TouchableOpacity
 } from 'react-native';
 import {MapView} from 'expo';
 import {TaskManager} from 'expo';
-import {Button} from 'react-native-elements'
+import {Button, Card} from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
+
+const screen = Dimensions.get('window');
 
 class MainScreen extends React.Component {
     componentDidMount(){
         this.props.startBackgroundFetch();
+        this.props.fetchRides();
     }
     /**
      * Adds button to the header for signing out the user.
@@ -41,13 +48,13 @@ class MainScreen extends React.Component {
 
     render() {
         return (
-            <View style={{flex: 1}}>
+            <View style={{flex: 1, alignItems: 'center'}}>
                 {this.props.isLoading ?
                     <ActivityIndicator size="large" color="#0000ff" />
                     : <MapView
                         region={this.props.region}
                         onRegionChange={region => console.log(region)}
-                        style={{flex: 1}}
+                        style={{...StyleSheet.absoluteFillObject}}
                     >
                         <MapView.Marker
                             coordinate={{
@@ -59,9 +66,28 @@ class MainScreen extends React.Component {
                         </MapView.Marker>
                     </MapView>
                 }
+                {this.props.rides.map(ride => (
+                    <View style={styles.overlay} key={ride.ride_id}>
+                        <Text style={styles.text}>Touchable Opacityadasdasdasdasdasd
+                            asdasdasdasdasd asd asd as das d
+                        </Text>
+                    </View>
+                ))}
             </View>
         );
     }
 }
+const styles = StyleSheet.create({
+    overlay: {
+        position: 'absolute',
+        bottom: 20,
+        backgroundColor: 'white',
+        width: screen.width/1.2,
+        height: screen.height/7,
+        borderRadius: 10,
+        borderWidth: 0.5
+    },
+});
+
 
 export default MainScreen;

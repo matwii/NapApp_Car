@@ -4,7 +4,7 @@ import {AppLoading, Asset, Font, Icon, TaskManager} from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 import {Provider} from 'react-redux';
 import configureStore from './store/configureStore';
-import {fetchLocationError, updateCarPosition} from "./actions/background-actions";
+import {fetchLocationError, updateCarPosition, setSocket} from "./actions/background-actions";
 const LOCATION_TASK_NAME = 'background-location-task';
 
 
@@ -54,6 +54,7 @@ export default class App extends React.Component {
                 // to remove this if you are not using it in your app
                 'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
             }),
+            await store.dispatch(setSocket())
         ]);
     };
 
