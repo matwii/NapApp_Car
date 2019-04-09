@@ -53,7 +53,6 @@ class MainScreen extends React.Component {
                     <ActivityIndicator size="large" color="#0000ff" />
                     : <MapView
                         region={this.props.region}
-                        onRegionChange={region => console.log(region)}
                         style={{...StyleSheet.absoluteFillObject}}
                     >
                         <MapView.Marker

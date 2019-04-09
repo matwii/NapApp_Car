@@ -41,7 +41,6 @@ export const updateCarPosition = (region, carId,  token) => (
         dispatch(setCurrentRegion(region));
         //const response = await api.updateCarPosition(carId, token, region.latitude, region.longitude);
         socket.emit('updateCarPosition', carId, token, region.latitude, region.longitude);
-        socket.emit('getCarRides', carId);
     }
 );
 
