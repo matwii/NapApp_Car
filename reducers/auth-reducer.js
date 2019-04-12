@@ -47,7 +47,7 @@ const authReducer = (state = initialState, action) => {
         case SET_SOCKET: {
             return {
                 ...state,
-                socket: io(`${HOST}`, { forceNew: true })
+                socket: io(`${HOST}`, { query: {token: state.token} })
             }
         }
         default:

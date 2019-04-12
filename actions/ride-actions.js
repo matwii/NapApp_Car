@@ -24,22 +24,23 @@ export const fetchRides  = () => (
         const {socket, carId} = getState().auth;
         dispatch(fetchRidesRequest())
         socket.on('car_rides_'+carId, async (rides) => {
-            const firstRide = rides.pop();
-            const startCoordinates = {
-                latitude: firstRide.start_latitude,
-                longitude: firstRide.start_longitude
-            };
-            const viaCoordinates = {
-                latitude: firstRide.via_latitude,
-                longitude: firstRide.via_longitude
-            };
-            const endCoordinates = {
-                latitude: firstRide.end_latitude,
-                longitude: firstRide.end_longitude
-            };
-            console.log(startCoordinates, viaCoordinates)
-            await dispatch(fetchRidesSuccess(rides));
-            dispatch(fetchDirections(startCoordinates, viaCoordinates))
+            if (rides) {
+                const firstRide = rides[rides.length -1];
+                const startCoordinates = {
+                    latitude: firstRide.start_latitude,
+                    longitude: firstRide.start_longitude
+                };
+                const viaCoordinates = {
+                    latitude: firstRide.via_latitude,
+                    longitude: firstRide.via_longitude
+                };
+                const endCoordinates = {
+                    latitude: firstRide.end_latitude,
+                    longitude: firstRide.end_longitude
+                };
+                await dispatch(fetchRidesSuccess(rides));
+                dispatch(fetchDirections(startCoordinates, viaCoordinates, endCoordinates))
+            }
         })
     }
 );

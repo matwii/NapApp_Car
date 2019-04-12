@@ -35,7 +35,7 @@ export const fetchLocationRequest = () => (
     }
 );
 
-export const updateCarPosition = (region, carId,  token) => (
+export const updateCarPosition = (region, carId, token) => (
     async (dispatch, getState) => {
         const {socket} = await getState().auth;
         dispatch(setCurrentRegion(region));

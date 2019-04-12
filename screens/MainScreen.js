@@ -17,9 +17,11 @@ import { Ionicons } from '@expo/vector-icons';
 const screen = Dimensions.get('window');
 
 class MainScreen extends React.Component {
-    componentDidMount(){
+    async componentDidMount(){
+        await this.props.setSocket();
         this.props.startBackgroundFetch();
         this.props.fetchRides();
+        this.props.navigation.setParams({ socket: this.props.socket});
     }
     /**
      * Adds button to the header for signing out the user.
@@ -36,6 +38,7 @@ class MainScreen extends React.Component {
                         await AsyncStorage.removeItem('token');
                         await AsyncStorage.removeItem('id');
                         await TaskManager.unregisterTaskAsync('background-location-task');
+                        await navigation.state.params.socket.disconnect();
                         navigation.navigate('Auth')
                     }}
                     title='Sign Out'
@@ -63,6 +66,11 @@ class MainScreen extends React.Component {
                         >
                             <Ionicons name={Platform.OS === 'ios' ? 'ios-car' : 'md-car'} size={32} color="blue" />
                         </MapView.Marker>
+                        <MapView.Polyline
+                            coordinates={this.props.directions}
+                            strokeWidth={2}
+                            strokeColor="red"
+                        />
                     </MapView>
                 }
                 {this.props.rides.map(ride => (

@@ -3,6 +3,7 @@ import {
     FETCH_DIRECTIONS_REQUEST,
 } from './action-types';
 import {API_KEY} from '../config/config';
+import Polyline from '@mapbox/polyline';
 
 const fetchDirectionsRequest = () => (
     {
@@ -36,12 +37,13 @@ const fetchDirectionsSuccess =
         }
     );
 
-export function fetchDirections(startCoordinates, endCoordinates) {
-    return function (dispatch) {
+export const fetchDirections = (startCoordinates, viaCoordinates, endCoordinates) => (
+    async(dispatch) => {
         dispatch(fetchDirectionsRequest());
         const start = `${startCoordinates.latitude},${startCoordinates.longitude}`;
+        const via = `${viaCoordinates.latitude},${viaCoordinates.longitude}`;
         const end = `${endCoordinates.latitude},${endCoordinates.longitude}`;
-        return fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${start}&destination=${end}&key=${API_KEY}`)
+        return fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${via}&destination=${end}&key=${API_KEY}`)
             .then(
                 response => response.json(),
                 error => console.log('error', error),
@@ -52,5 +54,5 @@ export function fetchDirections(startCoordinates, endCoordinates) {
                 const bounds = myJson.routes[0].bounds;
                 dispatch(fetchDirectionsSuccess(endCoordinates, dir, duration, bounds));
             });
-    };
-}
+    }
+);

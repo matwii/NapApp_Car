@@ -2,6 +2,7 @@ import {
     FETCH_LOCATION_ERROR,
     FETCH_LOCATION_REQUEST,
     SET_REGION,
+    FETCH_DIRECTIONS_SUCCESS
 } from '../actions/action-types';
 import {MapView} from 'expo'
 
@@ -14,6 +15,12 @@ const initialState = {
     },
     isLoading: true,
     error: false,
+    routeToDestination: [],
+    timeToDestination: 0,
+    destinationCoordinates: null,
+    destinationBounds: null,
+    timeToPickup: 0,
+    pickupCoordinates: null,
 };
 
 const mapReducer = (state = initialState, action) => {
@@ -37,6 +44,15 @@ const mapReducer = (state = initialState, action) => {
                 isLoading: false
             };
         }
+        case FETCH_DIRECTIONS_SUCCESS:
+            return {
+                ...state,
+                routeToDestination: action.payload.directions,
+                timeToDestination: action.payload.duration,
+                destinationCoordinates: action.payload.coordinates,
+                destinationBounds: action.payload.bounds,
+                afterPickup: false,
+            };
         default:
             return state
     }

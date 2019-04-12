@@ -54,7 +54,6 @@ export default class App extends React.Component {
                 // to remove this if you are not using it in your app
                 'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
             }),
-            await store.dispatch(setSocket())
         ]);
     };
 
