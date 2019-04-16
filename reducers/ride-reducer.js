@@ -1,7 +1,7 @@
 import {
     FETCH_RIDES_REQUEST,
     FETCH_RIDES_SUCCESS,
-    FETCH_RIDES_ERROR,
+    FETCH_RIDES_ERROR, SIGN_OUT,
 } from '../actions/action-types';
 
 const initialState = {
@@ -31,6 +31,9 @@ const rideReducer = (state = initialState, action) => {
                 ...state,
                 isLoading: true
             };
+        }
+        case SIGN_OUT: {
+            return initialState
         }
         default:
             return state

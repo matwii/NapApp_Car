@@ -1,6 +1,7 @@
 import {
-    FETCH_DIRECTIONS_SUCCESS,
+    FETCH_PICKUP_DIRECTIONS_SUCCESS,
     FETCH_DIRECTIONS_REQUEST,
+    FETCH_DESTINATION_DIRECTIONS_SUCCESS
 } from './action-types';
 import {API_KEY} from '../config/config';
 import Polyline from '@mapbox/polyline';
@@ -27,23 +28,32 @@ export function getPoints(route) {
 }
 
 
-const fetchDirectionsSuccess =
+const fetchPickupDirectionsSuccess =
     (coordinates, directions, duration, bounds) => (
         {
-            type: FETCH_DIRECTIONS_SUCCESS,
+            type: FETCH_PICKUP_DIRECTIONS_SUCCESS,
             payload: {
                 coordinates, directions, duration, bounds,
             },
         }
     );
 
-export const fetchDirections = (startCoordinates, viaCoordinates, endCoordinates) => (
+const fetchDestinationDirectionsSuccess =
+    (coordinates, directions, duration, bounds) => (
+        {
+            type: FETCH_DESTINATION_DIRECTIONS_SUCCESS,
+            payload: {
+                coordinates, directions, duration, bounds,
+            },
+        }
+    );
+
+export const fetchPickupDirections = (startCoordinates, viaCoordinates) => (
     async(dispatch) => {
         dispatch(fetchDirectionsRequest());
         const start = `${startCoordinates.latitude},${startCoordinates.longitude}`;
         const via = `${viaCoordinates.latitude},${viaCoordinates.longitude}`;
-        const end = `${endCoordinates.latitude},${endCoordinates.longitude}`;
-        return fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${via}&destination=${end}&key=${API_KEY}`)
+        return fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${start}&destination=${via}&key=${API_KEY}`)
             .then(
                 response => response.json(),
                 error => console.log('error', error),
@@ -52,7 +62,25 @@ export const fetchDirections = (startCoordinates, viaCoordinates, endCoordinates
                 const dir = getPoints(myJson.routes[0]);
                 const duration = myJson.routes[0].legs[0].duration.value;
                 const bounds = myJson.routes[0].bounds;
-                dispatch(fetchDirectionsSuccess(endCoordinates, dir, duration, bounds));
+                dispatch(fetchPickupDirectionsSuccess(viaCoordinates, dir, duration, bounds));
             });
     }
 );
+
+export const fetchDestinationDirections = (viaCoordinates, endCoordinates) => (
+    async(dispatch) => {
+        const start = `${viaCoordinates.latitude},${viaCoordinates.longitude}`;
+        const via = `${endCoordinates.latitude},${endCoordinates.longitude}`;
+        return fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${start}&destination=${via}&key=${API_KEY}`)
+            .then(
+                response => response.json(),
+                error => console.log('error', error),
+            )
+            .then((myJson) => {
+                const dir = getPoints(myJson.routes[0]);
+                const duration = myJson.routes[0].legs[0].duration.value;
+                const bounds = myJson.routes[0].bounds;
+                dispatch(fetchDestinationDirectionsSuccess(endCoordinates, dir, duration, bounds));
+            });
+    }
+)

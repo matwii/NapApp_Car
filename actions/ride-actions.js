@@ -3,8 +3,11 @@ import {
     FETCH_RIDES_ERROR,
     FETCH_RIDES_SUCCESS
 } from './action-types'
-import {fetchDirections} from "./map-actions";
+import {fetchPickupDirections, fetchDestinationDirections} from "./map-actions";
 
+/**
+ * Tells redux store that we started a request for rides, this will start the loading state.
+ */
 const fetchRidesRequest = () => (
     {
         type: FETCH_RIDES_REQUEST,
@@ -12,6 +15,11 @@ const fetchRidesRequest = () => (
     }
 );
 
+/**
+ * If fetch rides, we dispatch a success state to redux store.
+ * @param rides
+ * @returns {{type: string, payload: {rides: *}}}
+ */
 const fetchRidesSuccess = (rides) => (
     {
         type: FETCH_RIDES_SUCCESS,
@@ -19,13 +27,18 @@ const fetchRidesSuccess = (rides) => (
     }
 );
 
+/**
+ * Fetches the rides for this car from the database.
+ * If it gets an array of cars, it will render the directions on the map.
+ * @returns {Function}
+ */
 export const fetchRides  = () => (
     async (dispatch, getState) => {
         const {socket, carId} = getState().auth;
         dispatch(fetchRidesRequest())
         socket.on('car_rides_'+carId, async (rides) => {
-            if (rides) {
-                const firstRide = rides[rides.length -1];
+            if (rides.length > 0) {
+                const firstRide = rides[rides.length - 1];
                 const startCoordinates = {
                     latitude: firstRide.start_latitude,
                     longitude: firstRide.start_longitude
@@ -39,7 +52,8 @@ export const fetchRides  = () => (
                     longitude: firstRide.end_longitude
                 };
                 await dispatch(fetchRidesSuccess(rides));
-                dispatch(fetchDirections(startCoordinates, viaCoordinates, endCoordinates))
+                await dispatch(fetchPickupDirections(startCoordinates, viaCoordinates));
+                dispatch(fetchDestinationDirections(viaCoordinates, endCoordinates));
             }
         })
     }

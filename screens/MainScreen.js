@@ -5,23 +5,27 @@ import {
     View,
     ActivityIndicator,
     StyleSheet,
-    Text,
     Dimensions,
     TouchableOpacity
 } from 'react-native';
 import {MapView} from 'expo';
 import {TaskManager} from 'expo';
-import {Button, Card} from 'react-native-elements'
+import {Button, Text} from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
 
 const screen = Dimensions.get('window');
 
 class MainScreen extends React.Component {
+
+    /**
+     * Runds methods after component has mounted.
+     * @returns {Promise<void>}
+     */
     async componentDidMount(){
-        await this.props.setSocket();
-        this.props.startBackgroundFetch();
-        this.props.fetchRides();
-        this.props.navigation.setParams({ socket: this.props.socket});
+        await this.props.setSocket(); //Starts the websocket to the server.
+        this.props.startBackgroundFetch(); //Starts background location fetching and stores location to server.
+        this.props.fetchRides(); //If the car has any booked rides, it fetches these and draws directions.
+        this.props.navigation.setParams({ socket: this.props.socket, signOut: this.props.signOut}); //Adds the socket connection as param to the logout button in header.
     }
     /**
      * Adds button to the header for signing out the user.
@@ -39,6 +43,7 @@ class MainScreen extends React.Component {
                         await AsyncStorage.removeItem('id');
                         await TaskManager.unregisterTaskAsync('background-location-task');
                         await navigation.state.params.socket.disconnect();
+                        await navigation.state.params.signOut();
                         navigation.navigate('Auth')
                     }}
                     title='Sign Out'
@@ -66,6 +71,16 @@ class MainScreen extends React.Component {
                         >
                             <Ionicons name={Platform.OS === 'ios' ? 'ios-car' : 'md-car'} size={32} color="blue" />
                         </MapView.Marker>
+                        {this.props.pickupCoordinates &&
+                        <MapView.Marker
+                            tracksViewChanges={false}
+                            pinColor={'green'}
+                            coordinate={this.props.pickupCoordinates}
+                        />}
+                        {this.props.destinationCoordinates &&
+                        <MapView.Marker
+                            coordinate={this.props.destinationCoordinates}
+                        />}
                         <MapView.Polyline
                             coordinates={this.props.directions}
                             strokeWidth={2}
@@ -75,9 +90,7 @@ class MainScreen extends React.Component {
                 }
                 {this.props.rides.map(ride => (
                     <View style={styles.overlay} key={ride.ride_id}>
-                        <Text style={styles.text}>Touchable Opacityadasdasdasdasdasd
-                            asdasdasdasdasd asd asd as das d
-                        </Text>
+                        {ride.ride_status = 1 ? <Text h4 style={styles.text}>Picking up {ride.name}</Text> : <Text>Driving {ride.name} to destination</Text>}
                     </View>
                 ))}
             </View>
@@ -92,7 +105,9 @@ const styles = StyleSheet.create({
         width: screen.width/1.2,
         height: screen.height/7,
         borderRadius: 10,
-        borderWidth: 0.5
+        borderWidth: 0.5,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
 });
 

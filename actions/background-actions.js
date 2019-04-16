@@ -2,7 +2,7 @@ import {
     SET_REGION,
     FETCH_LOCATION_ERROR,
     FETCH_LOCATION_REQUEST,
-    SET_SOCKET
+    SET_SOCKET, SIGN_OUT
 } from './action-types';
 import {Location, TaskManager, Permissions} from 'expo';
 
@@ -18,6 +18,12 @@ export const setCurrentRegion = (region) => (
 export const setSocket = () => (
     {
         type: SET_SOCKET,
+    }
+);
+
+export const signOut = () => (
+    {
+        type: SIGN_OUT
     }
 );
 

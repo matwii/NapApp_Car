@@ -2,9 +2,9 @@ import {
     FETCH_LOCATION_ERROR,
     FETCH_LOCATION_REQUEST,
     SET_REGION,
-    FETCH_DIRECTIONS_SUCCESS
+    FETCH_PICKUP_DIRECTIONS_SUCCESS,
+    FETCH_DESTINATION_DIRECTIONS_SUCCESS, SIGN_OUT
 } from '../actions/action-types';
-import {MapView} from 'expo'
 
 const initialState = {
     region: {
@@ -19,8 +19,10 @@ const initialState = {
     timeToDestination: 0,
     destinationCoordinates: null,
     destinationBounds: null,
+    routeToPickup: [],
     timeToPickup: 0,
     pickupCoordinates: null,
+    pickupBounds: null
 };
 
 const mapReducer = (state = initialState, action) => {
@@ -44,15 +46,27 @@ const mapReducer = (state = initialState, action) => {
                 isLoading: false
             };
         }
-        case FETCH_DIRECTIONS_SUCCESS:
+        case FETCH_PICKUP_DIRECTIONS_SUCCESS:
+            return {
+                ...state,
+                routeToPickup: action.payload.directions,
+                timeToPickup: action.payload.duration,
+                pickupCoordinates: action.payload.coordinates,
+                pickupBounds: action.payload.bounds,
+                afterPickup: false,
+            };
+        case FETCH_DESTINATION_DIRECTIONS_SUCCESS:
             return {
                 ...state,
                 routeToDestination: action.payload.directions,
                 timeToDestination: action.payload.duration,
                 destinationCoordinates: action.payload.coordinates,
                 destinationBounds: action.payload.bounds,
-                afterPickup: false,
+                afterPickup: true,
             };
+        case SIGN_OUT: {
+            return initialState
+        }
         default:
             return state
     }
