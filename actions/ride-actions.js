@@ -37,6 +37,7 @@ export const fetchRides  = () => (
         const {socket, carId} = getState().auth;
         dispatch(fetchRidesRequest())
         socket.on('car_rides_'+carId, async (rides) => {
+            console.log(rides);
             if (rides.length > 0) {
                 const firstRide = rides[rides.length - 1];
                 const startCoordinates = {
