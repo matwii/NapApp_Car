@@ -90,7 +90,7 @@ class MainScreen extends React.Component {
                 }
                 {this.props.rides.map(ride => (
                     <View style={styles.overlay} key={ride.ride_id}>
-                        {ride.ride_status = 1 ? <Text h4 style={styles.text}>Picking up {ride.name}</Text> : <Text>Driving {ride.name} to destination</Text>}
+                        {ride.status_id === 1 ? <Text h4 style={styles.text}>Picking up {ride.name}</Text> : <Text>Driving {ride.name} to destination</Text>}
                     </View>
                 ))}
             </View>
