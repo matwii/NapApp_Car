@@ -51,10 +51,10 @@ export const fetchRides  = () => (
                     latitude: firstRide.end_latitude,
                     longitude: firstRide.end_longitude
                 };
-                await dispatch(fetchRidesSuccess(rides));
                 await dispatch(fetchPickupDirections(startCoordinates, viaCoordinates));
                 dispatch(fetchDestinationDirections(viaCoordinates, endCoordinates));
             }
+            dispatch(fetchRidesSuccess(rides));
         })
     }
 );

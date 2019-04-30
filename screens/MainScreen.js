@@ -55,6 +55,7 @@ class MainScreen extends React.Component {
     };
 
     render() {
+        console.log(this.props.rides);
         return (
             <View style={{flex: 1, alignItems: 'center'}}>
                 {this.props.isLoading ?
@@ -89,9 +90,10 @@ class MainScreen extends React.Component {
                     </MapView>
                 }
                 {this.props.rides.map(ride => (
+                    ride ?
                     <View style={styles.overlay} key={ride.ride_id}>
-                        {ride.status_id === 1 ? <Text h4 style={styles.text}>Picking up {ride.name}</Text> : <Text>Driving {ride.name} to destination</Text>}
-                    </View>
+                        {ride.status_id === 1 ? <Text h4 style={styles.text}>Picking up {ride.name}</Text> : ride.status_id === 2 ? <Text>Driving {ride.name} to destination</Text> : null}
+                    </View> : null
                 ))}
             </View>
         );
